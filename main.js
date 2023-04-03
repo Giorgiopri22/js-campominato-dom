@@ -18,11 +18,19 @@ function generateGrid() {
     document.documentElement.style.setProperty('--num-cells', numCells);
     document.documentElement.style.setProperty('--num-cols', numCols);
   
-    let gridHtml = "";
-    let numeriUnici = [];
     
-
+    
+    
+    // Genera numeri casuali unici per le bombe
+    let bombe = [];
+    while (bombe.length < 16) {
+        let numeroCasuale = Math.floor(Math.random() * numCells);
+        if (!bombe.includes(numeroCasuale)) {
+        bombe.push(numeroCasuale);
+        }
+    }
     // genera numeri casuali unici
+    let numeriUnici = [];
     while (numeriUnici.length < numCells) {
 
       let numeroCasuale = Math.floor(Math.random() * numCells) + 1;
@@ -30,17 +38,27 @@ function generateGrid() {
         numeriUnici.push(numeroCasuale);
       }
     }
+    let gridHtml = "";
     for (let i = 0; i < numCells; i++) {
       gridHtml += "<div class='cell' id='cell-" + i + "'>" + numeriUnici[i] + "</div>";
     }
     document.getElementById("grid").innerHTML = gridHtml;
   
     let cells = document.getElementsByClassName("cell");
+    let punteggio = 0;
     for (let i = 0; i < cells.length; i++) {
-      cells[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        console.log(this.innerHTML);
-      });
-    }
+        cells[i].addEventListener("click", function() {
+        if (bombe.includes(i)) {
+            this.style.backgroundColor = "red";
+            alert("Hai perso! Il tuo punteggio è " + punteggio);
+        } else {
+            this.style.backgroundColor = "lightblue";
+            punteggio++;
+            if (punteggio === numCells - bombe.length) {
+            alert("Hai vinto! Il tuo punteggio è " + punteggio);
+            }
+        }
+        });
+    } 
   }
   
